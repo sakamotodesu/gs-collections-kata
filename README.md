@@ -1,5 +1,7 @@
 # GS Collections Kata
 
+[![Build Status](https://travis-ci.org/sakamotodesu/gs-collections-kata.svg?branch=master)](https://travis-ci.org/sakamotodesu/gs-collections-kata)
+
 ## What is a Code Kata?
 A _kata_ is an exercise in martial arts. A code kata is an exercise in programming which helps hone your skills through practice and repetition. You can find out more about code Katas in general [here](http://codekata.pragprog.com).
 
@@ -9,3 +11,4 @@ The GS Collections Kata is a fun way to help you learn idiomatic GS Collections 
 New concepts are introduced in the [slides](http://www.goldmansachs.com/gs-collections/documents/GS Collections Training Session and Kata 5.0.0.pdf), with coding exercises at the end of each section. As you complete each exercise, you can check your answers against the [solutions branch](https://github.com/goldmansachs/gs-collections-kata/tree/solutions).
 
 Make sure you read the instructor notes in the slides. In addition, you can refer to the [GS Collections Reference Guide](http://www.goldmansachs.com/gs-collections/documents/GS Collections Reference Guide 5.0.0.pdf) for further detail and examples of the API.
+
