@@ -20,23 +20,24 @@ import java.util.List;
 
 import com.gs.collections.api.block.predicate.Predicate;
 import com.gs.collections.api.list.MutableList;
+import com.gs.collections.impl.block.factory.Predicates;
 import com.gs.collections.impl.list.mutable.FastList;
+import com.gs.collections.impl.list.mutable.ListAdapter;
 import com.gs.collections.impl.utility.ArrayIterate;
 import com.gs.collections.impl.utility.Iterate;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class Exercise4Test extends CompanyDomainForKata
-{
+public class Exercise4Test extends CompanyDomainForKata {
     /**
      * Solve this without changing the return type of {@link Company#getSuppliers()}. Find the appropriate method on
      * {@link ArrayIterate}.
      */
     @Test
-    public void findSupplierNames()
-    {
-        MutableList<String> supplierNames = null;
-
+    public void findSupplierNames() {
+        MutableList<String> supplierNames = ArrayIterate.collect(this.company.getSuppliers(), Supplier::getName);
+        //MutableList<Supplier> gsSupp = ArrayAdapter.adapt(this.company.getSuppliers());
+        //gsSupp.collect(Supplier::getName);
         MutableList<String> expectedSupplierNames = FastList.newListWith(
                 "Shedtastic",
                 "Splendid Crocks",
@@ -53,10 +54,9 @@ public class Exercise4Test extends CompanyDomainForKata
      * satisfy that Predicate.
      */
     @Test
-    public void countSuppliersWithMoreThanTwoItems()
-    {
-        Predicate<Supplier> moreThanTwoItems = null;
-        int suppliersWithMoreThanTwoItems = 0;
+    public void countSuppliersWithMoreThanTwoItems() {
+        Predicate<Supplier> moreThanTwoItems = supp -> supp.getItemNames().length > 2;
+        int suppliersWithMoreThanTwoItems = ArrayIterate.count(this.company.getSuppliers(), moreThanTwoItems);
         Assert.assertEquals("suppliers with more than 2 items", 5, suppliersWithMoreThanTwoItems);
     }
 
@@ -64,20 +64,18 @@ public class Exercise4Test extends CompanyDomainForKata
      * Try to solve this without changing the return type of {@link Supplier#getItemNames()}.
      */
     @Test
-    public void whoSuppliesSandwichToaster()
-    {
+    public void whoSuppliesSandwichToaster() {
         // Create a Predicate that will check to see if a Supplier supplies a "sandwich toaster".
-        Predicate<Supplier> suppliesToaster = null;
+        Predicate<Supplier> suppliesToaster = supp -> ArrayIterate.contains(supp.getItemNames(), "sandwich toaster");
 
         // Find one supplier that supplies toasters.
-        Supplier toasterSupplier = null;
+        Supplier toasterSupplier = ArrayIterate.detect(this.company.getSuppliers(), suppliesToaster);
         Assert.assertNotNull("toaster supplier", toasterSupplier);
         Assert.assertEquals("Doxins", toasterSupplier.getName());
     }
 
     @Test
-    public void filterOrderValues()
-    {
+    public void filterOrderValues() {
         List<Order> orders = this.company.getMostRecentCustomer().getOrders();
         /**
          * Get the order values that are greater than 1.5.
@@ -88,13 +86,14 @@ public class Exercise4Test extends CompanyDomainForKata
     }
 
     @Test
-    public void filterOrders()
-    {
+    public void filterOrders() {
         List<Order> orders = this.company.getMostRecentCustomer().getOrders();
+        MutableList<Order> gscOrders = ListAdapter.adapt(orders);
+
         /**
          * Get the actual orders (not their double values) where those orders have a value greater than 2.0.
          */
-        MutableList<Order> filtered = null;
+        MutableList<Order> filtered = gscOrders.select(Predicates.attributeGreaterThan(Order::getValue,2.0));
         Assert.assertEquals(FastList.newListWith(Iterate.getFirst(this.company.getMostRecentCustomer().getOrders())), filtered);
     }
 }

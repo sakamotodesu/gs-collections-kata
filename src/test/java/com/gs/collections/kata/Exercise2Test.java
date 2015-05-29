@@ -18,20 +18,20 @@ package com.gs.collections.kata;
 
 import com.gs.collections.api.block.predicate.Predicate;
 import com.gs.collections.api.list.MutableList;
+import com.gs.collections.api.partition.list.PartitionMutableList;
+import com.gs.collections.impl.block.factory.Predicates;
 import com.gs.collections.impl.test.Verify;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class Exercise2Test extends CompanyDomainForKata
-{
+public class Exercise2Test extends CompanyDomainForKata {
     /**
      * Set up a {@link Predicate} that tests to see if a {@link Customer}'s city is "London"
      */
-    private static final Predicate<Customer> CUSTOMER_FROM_LONDON = null;
+    private static final Predicate<Customer> CUSTOMER_FROM_LONDON = customer -> "London".equals(customer.getCity());
 
     @Test
-    public void customerFromLondonPredicate()
-    {
+    public void customerFromLondonPredicate() {
         String predicateClass = CUSTOMER_FROM_LONDON.getClass().getSimpleName();
         Assert.assertTrue(
                 "Solution should use Predicates.attributeEquals() or a lambda but used " + predicateClass,
@@ -53,9 +53,8 @@ public class Exercise2Test extends CompanyDomainForKata
      * Do any customers come from London? Use the Predicate {@link #CUSTOMER_FROM_LONDON}.
      */
     @Test
-    public void doAnyCustomersLiveInLondon()
-    {
-        boolean anyCustomersFromLondon = false;
+    public void doAnyCustomersLiveInLondon() {
+        boolean anyCustomersFromLondon = this.company.getCustomers().anySatisfy(CUSTOMER_FROM_LONDON);
         Assert.assertTrue(anyCustomersFromLondon);
     }
 
@@ -63,9 +62,8 @@ public class Exercise2Test extends CompanyDomainForKata
      * Do all customers come from London? Use the Predicate {@link #CUSTOMER_FROM_LONDON}.
      */
     @Test
-    public void doAllCustomersLiveInLondon()
-    {
-        boolean allCustomersFromLondon = true;
+    public void doAllCustomersLiveInLondon() {
+        boolean allCustomersFromLondon = this.company.getCustomers().allSatisfy(CUSTOMER_FROM_LONDON);
         Assert.assertFalse(allCustomersFromLondon);
     }
 
@@ -73,9 +71,8 @@ public class Exercise2Test extends CompanyDomainForKata
      * How many customers come from London? Use the Predicate {@link #CUSTOMER_FROM_LONDON}.
      */
     @Test
-    public void howManyCustomersLiveInLondon()
-    {
-        int numberOfCustomerFromLondon = 0;
+    public void howManyCustomersLiveInLondon() {
+        int numberOfCustomerFromLondon = this.company.getCustomers().count(CUSTOMER_FROM_LONDON);
         Assert.assertEquals("Should be 2 London customers", 2, numberOfCustomerFromLondon);
     }
 
@@ -84,9 +81,8 @@ public class Exercise2Test extends CompanyDomainForKata
      * #CUSTOMER_FROM_LONDON}.
      */
     @Test
-    public void getLondonCustomers()
-    {
-        MutableList<Customer> customersFromLondon = null;
+    public void getLondonCustomers() {
+        MutableList<Customer> customersFromLondon = this.company.getCustomers().select(CUSTOMER_FROM_LONDON);
         Verify.assertSize("Should be 2 London customers", 2, customersFromLondon);
     }
 
@@ -95,9 +91,8 @@ public class Exercise2Test extends CompanyDomainForKata
      * #CUSTOMER_FROM_LONDON}.
      */
     @Test
-    public void getCustomersWhoDontLiveInLondon()
-    {
-        MutableList<Customer> customersNotFromLondon = null;
+    public void getCustomersWhoDontLiveInLondon() {
+        MutableList<Customer> customersNotFromLondon = this.company.getCustomers().reject(CUSTOMER_FROM_LONDON);
         Verify.assertSize("customers not from London", 1, customersNotFromLondon);
     }
 
@@ -106,10 +101,10 @@ public class Exercise2Test extends CompanyDomainForKata
      * Use the Predicate {@link #CUSTOMER_FROM_LONDON}.
      */
     @Test
-    public void getCustomersWhoDoAndDoNotLiveInLondon()
-    {
-        MutableList<Customer> customersFromLondon = null;
-        MutableList<Customer> customersNotFromLondon = null;
+    public void getCustomersWhoDoAndDoNotLiveInLondon() {
+        PartitionMutableList<Customer> Partion = this.company.getCustomers().partition(CUSTOMER_FROM_LONDON);
+        MutableList<Customer> customersFromLondon = Partion.getSelected();
+        MutableList<Customer> customersNotFromLondon = Partion.getRejected();
         Verify.assertSize("Should be 2 London customers", 2, customersFromLondon);
         Verify.assertSize("customers not from London", 1, customersNotFromLondon);
     }
@@ -118,8 +113,7 @@ public class Exercise2Test extends CompanyDomainForKata
      * Implement {@link Company#getCustomerNamed(String)} and get this test to pass.
      */
     @Test
-    public void findMary()
-    {
+    public void findMary() {
         Customer mary = this.company.getCustomerNamed("Mary");
         Assert.assertEquals("customer's name should be Mary", "Mary", mary.getName());
     }
@@ -128,8 +122,7 @@ public class Exercise2Test extends CompanyDomainForKata
      * Implement {@link Company#getCustomerNamed(String)} and get this test to pass.
      */
     @Test
-    public void findPete()
-    {
+    public void findPete() {
         Customer pete = this.company.getCustomerNamed("Pete");
         Assert.assertNull(
                 "Should be null as there is no customer called Pete",
