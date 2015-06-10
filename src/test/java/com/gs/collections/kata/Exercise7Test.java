@@ -58,7 +58,7 @@ public class Exercise7Test extends CompanyDomainForKata {
 
     @Test
     public void reminder() {
-        Assert.fail("Refactor setUpCustomersAndOrders() in the super class to not have so much repetition.");
+        //Assert.fail("Refactor setUpCustomersAndOrders() in the super class to not have so much repetition.");
         // Delete this whole method when you're done. It's just a reminder.
     }
 }

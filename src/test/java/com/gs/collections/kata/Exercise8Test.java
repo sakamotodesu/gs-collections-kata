@@ -45,7 +45,7 @@ public class Exercise8Test extends CompanyDomainForKata
         Function0<Double> zeroValueFactory = () -> 0.0;
         Function2<Double, Customer, Double> aggregator = (result, customer) -> result + customer.getTotalOrderValue();
 
-        MutableMap<String, Double> map = null;
+        MutableMap<String, Double> map = this.company.getCustomers().aggregateBy(Customer::getCity,zeroValueFactory,aggregator);
         Assert.assertEquals(2, map.size());
         Assert.assertEquals(446.25, map.get("London"), 0.0);
         Assert.assertEquals(857.0, map.get("Liphook"), 0.0);
@@ -62,7 +62,9 @@ public class Exercise8Test extends CompanyDomainForKata
         Function0<Double> zeroValueFactory = () -> 0.0;
         Function2<Double, LineItem, Double> aggregator = (result, lineItem) -> result + lineItem.getValue();
 
-        MutableMap<String, Double> map = null;
+        MutableMap<String, Double> map = this.company.getOrders()
+                .flatCollect(Order::getLineItems)
+                .aggregateBy(LineItem::getName, zeroValueFactory, aggregator);
         Verify.assertSize(12, map);
         Assert.assertEquals(100.0, map.get("shed"), 0.0);
         Assert.assertEquals(10.5, map.get("cup"), 0.0);
@@ -74,7 +76,12 @@ public class Exercise8Test extends CompanyDomainForKata
     @Test
     public void sortedOrders()
     {
-        MutableSortedBag<Double> orderedPrices = null;
+        MutableSortedBag<Double> orderedPrices = this.company
+                .getOrders()
+                .flatCollect(Order::getLineItems)
+                .collect(LineItem::getValue)
+                .select(value -> value > 7.5)
+                .toSortedBag();
 
         MutableSortedBag<Double> expectedPrices = TreeBag.newBagWith(
                 Collections.reverseOrder(), 500.0, 150.0, 120.0, 75.0, 50.0, 50.0, 12.5);
