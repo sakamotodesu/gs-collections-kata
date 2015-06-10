@@ -21,7 +21,6 @@ import com.gs.collections.api.list.MutableList;
 import com.gs.collections.impl.block.function.AddFunction;
 import com.gs.collections.impl.list.mutable.FastList;
 import com.gs.collections.impl.utility.ListIterate;
-import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +29,9 @@ import java.util.List;
  * Customers have a name, city and a list of {@link Order}s
  */
 public class Customer {
-    public static final Function<Customer, String> TO_NAME = customer -> {
-        Assert.fail("Replace with the implementation of the Function.");
-        return null;
-    };
+    public static final Function<Customer, String> TO_NAME = Customer::getName;
 
-    public static final Function<Customer, String> TO_CITY = null;
+    public static final Function<Customer, String> TO_CITY = Customer::getCity;
 
     public static final Function<Customer, Double> TO_TOTAL_ORDER_VALUE = Customer::getTotalOrderValue;
 

@@ -16,14 +16,15 @@
 
 package com.gs.collections.kata;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import com.gs.collections.api.block.function.Function;
 import com.gs.collections.impl.block.function.AddFunction;
 import com.gs.collections.impl.collection.mutable.CollectionAdapter;
 import com.gs.collections.impl.utility.Iterate;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Has a number, a {@link Customer}, a {@link List} of {@link LineItem}s, and a boolean that states whether or not the order
@@ -32,6 +33,8 @@ import com.gs.collections.impl.utility.Iterate;
 public class Order
 {
     public static final Function<Order, Double> TO_VALUE = Order::getValue;
+
+    public static final Consumer<Order> DELIVER = Order::deliver;
 
     public static final Function<Order, Iterable<LineItem>> TO_LINE_ITEMS = Order::getLineItems;
 
