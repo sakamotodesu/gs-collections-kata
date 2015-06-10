@@ -17,6 +17,7 @@
 package com.gs.collections.kata;
 
 import java.util.Collections;
+import java.util.ListIterator;
 
 import com.gs.collections.api.RichIterable;
 import com.gs.collections.api.bag.sorted.MutableSortedBag;
@@ -32,20 +33,18 @@ import com.gs.collections.impl.test.Verify;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class Exercise8Test extends CompanyDomainForKata
-{
+public class Exercise8Test extends CompanyDomainForKata {
     /**
      * Extra credit. Aggregate the total order values by city.
      *
      * @see RichIterable#aggregateBy(Function, Function0, Function2)
      */
     @Test
-    public void totalOrderValuesByCity()
-    {
+    public void totalOrderValuesByCity() {
         Function0<Double> zeroValueFactory = () -> 0.0;
         Function2<Double, Customer, Double> aggregator = (result, customer) -> result + customer.getTotalOrderValue();
 
-        MutableMap<String, Double> map = this.company.getCustomers().aggregateBy(Customer::getCity,zeroValueFactory,aggregator);
+        MutableMap<String, Double> map = this.company.getCustomers().aggregateBy(Customer::getCity, zeroValueFactory, aggregator);
         Assert.assertEquals(2, map.size());
         Assert.assertEquals(446.25, map.get("London"), 0.0);
         Assert.assertEquals(857.0, map.get("Liphook"), 0.0);
@@ -57,8 +56,7 @@ public class Exercise8Test extends CompanyDomainForKata
      * how to use {@link RichIterable#flatCollect(Function)} to get an iterable of all items.
      */
     @Test
-    public void totalOrderValuesByItem()
-    {
+    public void totalOrderValuesByItem() {
         Function0<Double> zeroValueFactory = () -> 0.0;
         Function2<Double, LineItem, Double> aggregator = (result, lineItem) -> result + lineItem.getValue();
 
@@ -74,14 +72,13 @@ public class Exercise8Test extends CompanyDomainForKata
      * Extra credit. Find all customers' line item values greater than 7.5 and sort them by highest to lowest price.
      */
     @Test
-    public void sortedOrders()
-    {
+    public void sortedOrders() {
         MutableSortedBag<Double> orderedPrices = this.company
                 .getOrders()
                 .flatCollect(Order::getLineItems)
                 .collect(LineItem::getValue)
-                .select(value -> value > 7.5)
-                .toSortedBag();
+                .select(value -> value < 7.5)
+                .toSortedBag(Collections.reverseOrder());
 
         MutableSortedBag<Double> expectedPrices = TreeBag.newBagWith(
                 Collections.reverseOrder(), 500.0, 150.0, 120.0, 75.0, 50.0, 50.0, 12.5);
@@ -92,8 +89,7 @@ public class Exercise8Test extends CompanyDomainForKata
      * Extra credit. Figure out which customers ordered saucers (in any of their orders).
      */
     @Test
-    public void whoOrderedSaucers()
-    {
+    public void whoOrderedSaucers() {
         MutableList<Customer> customersWithSaucers = null;
         Verify.assertSize("customers with saucers", 2, customersWithSaucers);
     }
@@ -102,8 +98,7 @@ public class Exercise8Test extends CompanyDomainForKata
      * Extra credit. Look into the {@link MutableList#toMap(Function, Function)} method.
      */
     @Test
-    public void ordersByCustomerUsingAsMap()
-    {
+    public void ordersByCustomerUsingAsMap() {
         MutableMap<String, MutableList<Order>> customerNameToOrders =
                 this.company.getCustomers().toMap(null, null);
 
@@ -118,8 +113,7 @@ public class Exercise8Test extends CompanyDomainForKata
      * the most expensive item that the customer ordered.
      */
     @Test
-    public void mostExpensiveItem()
-    {
+    public void mostExpensiveItem() {
         MutableListMultimap<Double, Customer> multimap = null;
         Assert.assertEquals(3, multimap.size());
         Assert.assertEquals(2, multimap.keysView().size());
