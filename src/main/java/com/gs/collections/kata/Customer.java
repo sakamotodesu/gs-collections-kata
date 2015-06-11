@@ -22,9 +22,6 @@ import com.gs.collections.impl.block.function.AddFunction;
 import com.gs.collections.impl.list.mutable.FastList;
 import com.gs.collections.impl.utility.ListIterate;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Customers have a name, city and a list of {@link Order}s
  */
@@ -38,7 +35,7 @@ public class Customer {
     private final String name;
     private final String city;
 
-    private final List<Order> orders = new ArrayList<>();
+    private final MutableList<Order> orders = FastList.newList();
 
     public Customer(String name, String city) {
         this.name = name;
@@ -54,7 +51,7 @@ public class Customer {
     }
 
     public MutableList<Order> getOrders() {
-        return FastList.newList(orders);
+        return orders;
     }
 
     public void addOrder(Order anOrder) {
